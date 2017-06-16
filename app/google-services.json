@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "817070327898",
+    "firebase_url": "https://fir-database-d5caa.firebaseio.com",
+    "project_id": "fir-database-d5caa",
+    "storage_bucket": "fir-database-d5caa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817070327898:android:775bebf2f9fc1529",
+        "android_client_info": {
+          "package_name": "ness.edu.firebasedatabase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817070327898-ta7cgp35trq84uudrpvqk7cu3ei34ark.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ness.edu.firebasedatabase",
+            "certificate_hash": "2c57560112b410112988b2abc291dd25f1889c0b"
+          }
+        },
+        {
+          "client_id": "817070327898-ccbbkv9r48l5vcrdcrrrgp53no9obuv8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKaXQOvA9C9wUixQHtY9fOLsDvbwPbdyQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817070327898-ccbbkv9r48l5vcrdcrrrgp53no9obuv8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
