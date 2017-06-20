@@ -2,6 +2,7 @@ package ness.edu.firebasedatabase;
 
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.w3c.dom.Text;
 
@@ -80,15 +82,6 @@ public class WhatsappFragment extends Fragment {
         String text = etMessage.getText().toString();
         if(TextUtils.isEmpty(text))return;
 
-//        //reference to a Table MyCoolChat
-//        DatabaseReference chatTable = mDatabase.getReference("MyCoolChat");
-//
-//        //add a new Record: and get a reference to the new Record:
-//        DatabaseReference currentRow = chatTable.push();
-//
-//        //set the value:
-//        currentRow.setValue(text);
-        //TODO: save the user
         ChatMessage chat = new ChatMessage(new User(user), text);
 
         mDatabase.getReference("BetterChat").push().setValue(chat);
@@ -97,11 +90,7 @@ public class WhatsappFragment extends Fragment {
     }
 
 
-    private void setupRecycler() {
-        ChatAdapter adapter = new ChatAdapter(mDatabase.getReference("Chat"));
-        rvChat.setAdapter(adapter);
-        rvChat.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
+
 
 
     private void readFromDb(){
@@ -190,6 +179,37 @@ public class WhatsappFragment extends Fragment {
 
             }
         });
+    }
+
+    private void setupRecycler() {
+        BetterChatAdapter adapter = new BetterChatAdapter(mDatabase.getReference("BetterChat"));
+        rvChat.setAdapter(adapter);
+        rvChat.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    public static class BetterChatAdapter extends FirebaseRecyclerAdapter<ChatMessage, BetterChatAdapter.BetterChatViewHolder>{
+        public BetterChatAdapter(Query query) {
+            super(ChatMessage.class, R.layout.chat_item, BetterChatViewHolder.class, query);
+        }
+
+        @Override
+        protected void populateViewHolder(BetterChatViewHolder viewHolder, ChatMessage model, int position) {
+            viewHolder.tvMessage.setText(model.getMessage());
+            viewHolder.tvSenderTime.setText(model.getSender() + " " + model.getTime());
+        }
+
+        public static class BetterChatViewHolder extends RecyclerView.ViewHolder {
+            CircularImageView ivProfile;
+            TextView tvSenderTime;
+            TextView tvMessage;
+
+            public BetterChatViewHolder(View itemView) {
+                super(itemView);
+                ivProfile = (CircularImageView) itemView.findViewById(R.id.ivProfile);
+                tvMessage = (TextView) itemView.findViewById(R.id.tvChat);
+                tvSenderTime = (TextView) itemView.findViewById(R.id.tvSenderTime);
+            }
+        }
     }
 
 

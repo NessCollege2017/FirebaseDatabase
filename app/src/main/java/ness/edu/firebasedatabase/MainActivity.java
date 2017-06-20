@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 //2) push()... setValue
                 ref.setValue(user);
 
-            }//TODO: 2.01 //else if(idpResponse!=null && idpResponse.getError)
+            }// //else if(idpResponse!=null && idpResponse.getError)
         }
     }
 
