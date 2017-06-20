@@ -1,6 +1,7 @@
 package ness.edu.firebasedatabase;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -182,20 +184,24 @@ public class WhatsappFragment extends Fragment {
     }
 
     private void setupRecycler() {
-        BetterChatAdapter adapter = new BetterChatAdapter(mDatabase.getReference("BetterChat"));
+        BetterChatAdapter adapter = new BetterChatAdapter(getContext(), mDatabase.getReference("BetterChat"));
         rvChat.setAdapter(adapter);
         rvChat.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     public static class BetterChatAdapter extends FirebaseRecyclerAdapter<ChatMessage, BetterChatAdapter.BetterChatViewHolder>{
-        public BetterChatAdapter(Query query) {
+        private Context context;
+        public BetterChatAdapter(Context context, Query query) {
             super(ChatMessage.class, R.layout.chat_item, BetterChatViewHolder.class, query);
+            this.context = context;
         }
 
         @Override
         protected void populateViewHolder(BetterChatViewHolder viewHolder, ChatMessage model, int position) {
             viewHolder.tvMessage.setText(model.getMessage());
             viewHolder.tvSenderTime.setText(model.getSender() + " " + model.getTime());
+
+            Glide.with(context).load(model.getProfileImage()).into(viewHolder.ivProfile);
         }
 
         public static class BetterChatViewHolder extends RecyclerView.ViewHolder {
