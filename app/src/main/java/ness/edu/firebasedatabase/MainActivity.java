@@ -13,24 +13,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.auth.api.Auth;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import ness.edu.firebasedatabase.models.User;
 
 public class MainActivity extends AppCompatActivity {
     //properties:
@@ -80,6 +78,30 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN){
+            IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
+
+
+            if (resultCode == RESULT_OK){
+                //0) create a user
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                //convert it to a user:
+                User user = new User(currentUser);
+
+                //save the user
+                //1) ref the table.
+                DatabaseReference ref = FirebaseDatabase.getInstance().
+                        getReference("Users").child(user.getUid());
+                //2) push()... setValue
+                ref.setValue(user);
+
+            }//TODO: 2.01 //else if(idpResponse!=null && idpResponse.getError)
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mAuth.addAuthStateListener(mAuthListener);
@@ -112,14 +134,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
 

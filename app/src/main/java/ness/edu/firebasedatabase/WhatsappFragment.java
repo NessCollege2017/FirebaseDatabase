@@ -35,6 +35,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import ness.edu.firebasedatabase.models.ChatMessage;
+import ness.edu.firebasedatabase.models.User;
 
 
 /**
@@ -86,9 +88,10 @@ public class WhatsappFragment extends Fragment {
 //
 //        //set the value:
 //        currentRow.setValue(text);
+        //TODO: save the user
+        ChatMessage chat = new ChatMessage(new User(user), text);
 
-
-        mDatabase.getReference("Chat").push().setValue(text);
+        mDatabase.getReference("BetterChat").push().setValue(chat);
 
         etMessage.setText(null);
     }
@@ -132,17 +135,20 @@ public class WhatsappFragment extends Fragment {
 
 
     private void readOnce(){
-        //get a reference to the table.
-        //add a listener.
+        //1) reference to the table:
+        DatabaseReference chatTableRef = mDatabase.getReference("Chat");
 
-        //Get the data once from the server. Not updating unless we run the query again.
-        mDatabase.getReference("Chat").addListenerForSingleValueEvent(new ValueEventListener() {
+
+        //2) add a listener
+        chatTableRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot row : dataSnapshot.getChildren()) {
-                    Toast.makeText(getContext(), row.getValue(String.class), Toast.LENGTH_SHORT).show();
+            public void onDataChange(DataSnapshot tableSnapshot) {
+                for (DataSnapshot row : tableSnapshot.getChildren()) {
+                    String message = row.getValue(String.class);
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -152,21 +158,20 @@ public class WhatsappFragment extends Fragment {
 
 
     private void readIncremental(){
+        //get a reference to the table
+        DatabaseReference chatTableRef = mDatabase.getReference("Chat");
 
-
-        mDatabase.getReference("Chat").addChildEventListener(new ChildEventListener() {
-
-            //Once get all the table:
+        //2) add a listener
+        chatTableRef .addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String key) {
-                //Once get all the table:
-                String text = dataSnapshot.getValue(String.class);
-                Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-                //once a new item is added we will only get the new child
+            public void onChildAdded(DataSnapshot rowDataSnapshot, String s) {
+                String message = rowDataSnapshot.getValue(String.class);
+
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String key) {
 
             }
 
