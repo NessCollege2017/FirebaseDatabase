@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mAuth.addAuthStateListener(mAuthListener);
+
     }
 
     @Override
@@ -205,3 +206,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+
+//"C:\Program Files\Java\jdk1.8.0_131\bin\keytool" -exportcert -alias AndroidDebugKey -keystore %HOMEPATH%\.android\debug.keystore | "C:\Users\Android2017\Desktop\openssl\bin\openssl" sha1 -binary | "C:\Users\Android2017\Desktop\openssl\bin\openssl" base64
