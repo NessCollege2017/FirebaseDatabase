@@ -64,14 +64,20 @@ public class MainActivity extends AppCompatActivity {
                         setPermissions(
                                 Arrays.asList(Scopes.PROFILE, Scopes.EMAIL)
                         ).build(),
-                new AuthUI.IdpConfig.
-                        Builder(AuthUI.EMAIL_PROVIDER).
-                        build());
+
+                        new AuthUI.IdpConfig.
+                                Builder(AuthUI.FACEBOOK_PROVIDER).
+                                build(),
+
+                        new AuthUI.IdpConfig.
+                                Builder(AuthUI.EMAIL_PROVIDER).
+                                build());
 
                 Intent intent = AuthUI.
                         getInstance().
                         createSignInIntentBuilder().
-                        setProviders(providers).build();
+                        setLogo(R.drawable.logo).
+                        setAvailableProviders(providers).build();
                 startActivityForResult(intent, RC_SIGN_IN);
             }
         }
