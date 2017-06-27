@@ -113,14 +113,34 @@ public class ShoppingListFragment extends Fragment {
                 fabListShare = (FloatingActionButton) itemView.findViewById(R.id.fabListShare);
 
                 fabListShare.setOnClickListener(this);
+                itemView.setOnClickListener(this);
             }
             @Override
             public void onClick(View v) {
-                //1) instance of the userDialog fragment.
-                ShareFragment shareFragment = ShareFragment.newInstance(model);
+                if (v == fabListShare) {
+                    //1) instance of the userDialog fragment.
+                    ShareFragment shareFragment = ShareFragment.newInstance(model);
 
-                //2) instance.show(fm /*childFragmentManager*/, "tag")
-                shareFragment.show(fragment.getChildFragmentManager(), "ShareFragment");
+                    //2) instance.show(fm /*childFragmentManager*/, "tag")
+                    shareFragment.show(fragment.getChildFragmentManager(), "ShareFragment");
+                } else {
+
+                    //listid->
+                    ShoppingListItemsFragment shoppingListItemsFragment = new ShoppingListItemsFragment();
+                    //put the list as an extra... (newInstance())
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("list", model);
+                    shoppingListItemsFragment.setArguments(bundle);
+
+
+                    shoppingListItemsFragment.show(fragment.getChildFragmentManager(), "items");
+
+//                    fragment.getActivity().getSupportFragmentManager().
+//                            beginTransaction().
+//                            addToBackStack("shoppingListItemsFragment").
+//                            replace(R.id.container, shoppingListItemsFragment).
+//                            commit();
+                }
             }
         }
     }
