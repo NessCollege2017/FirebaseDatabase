@@ -1,11 +1,14 @@
 package ness.edu.firebasedatabase.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * A Shopping List title and owner.
  * POJO:
  */
-
-public class ShoppingLists {
+//we want to transfer the model in intents or newInstance -> Parcelable
+public class ShoppingLists implements Parcelable {
     private String ownerUID;
     private String listUID;
     private String name;
@@ -49,4 +52,31 @@ public class ShoppingLists {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.ownerUID);
+        dest.writeString(this.listUID);
+        dest.writeString(this.name);
+    }
+    protected ShoppingLists(Parcel in) {
+        this.ownerUID = in.readString();
+        this.listUID = in.readString();
+        this.name = in.readString();
+    }
+    public static final Parcelable.Creator<ShoppingLists> CREATOR = new Parcelable.Creator<ShoppingLists>() {
+        @Override
+        public ShoppingLists createFromParcel(Parcel source) {
+            return new ShoppingLists(source);
+        }
+
+        @Override
+        public ShoppingLists[] newArray(int size) {
+            return new ShoppingLists[size];
+        }
+    };
 }

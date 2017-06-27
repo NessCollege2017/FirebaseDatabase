@@ -90,6 +90,7 @@ public class ShoppingListFragment extends Fragment {
         @Override
         protected void populateViewHolder(ShoppingListViewHolder viewHolder, ShoppingLists model, int position) {
             viewHolder.tvListName.setText(model.getName());
+            viewHolder.model = model;
         }
 
         @Override
@@ -103,6 +104,7 @@ public class ShoppingListFragment extends Fragment {
             TextView tvListName;
             FloatingActionButton fabListShare;
             Fragment fragment;
+            ShoppingLists model;
 
             public ShoppingListViewHolder(View itemView, Fragment fragment) {
                 super(itemView);
@@ -112,11 +114,10 @@ public class ShoppingListFragment extends Fragment {
 
                 fabListShare.setOnClickListener(this);
             }
-
             @Override
             public void onClick(View v) {
                 //1) instance of the userDialog fragment.
-                ShareFragment shareFragment = new ShareFragment();
+                ShareFragment shareFragment = ShareFragment.newInstance(model);
 
                 //2) instance.show(fm /*childFragmentManager*/, "tag")
                 shareFragment.show(fragment.getChildFragmentManager(), "ShareFragment");
