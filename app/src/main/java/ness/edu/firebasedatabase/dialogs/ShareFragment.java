@@ -146,7 +146,7 @@ public class ShareFragment extends BottomSheetDialogFragment {
                         }
                         if (fragment instanceof DialogFragment)
                             ((DialogFragment) fragment).dismiss();
-                            }
+                    }
                 });
 
             }
