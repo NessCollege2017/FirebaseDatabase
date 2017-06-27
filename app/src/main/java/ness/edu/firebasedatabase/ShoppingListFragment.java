@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import ness.edu.firebasedatabase.dialogs.AddListFragment;
+import ness.edu.firebasedatabase.dialogs.ShareFragment;
 import ness.edu.firebasedatabase.models.ShoppingLists;
 
 
@@ -53,7 +54,7 @@ public class ShoppingListFragment extends Fragment {
         DatabaseReference ref =
                 FirebaseDatabase.getInstance().getReference("UserLists").child(user.getUid());
         //2) init a ShoppingListAdapter
-        ShoppingListAdapter adapter = new ShoppingListAdapter(ref);
+        ShoppingListAdapter adapter = new ShoppingListAdapter(ref, this);
 
         //3) set The LayoutManager and adapter of the recyclerView
         rvShoppingLists.setAdapter(adapter);
@@ -76,12 +77,14 @@ public class ShoppingListFragment extends Fragment {
 
 
     public static class ShoppingListAdapter extends FirebaseRecyclerAdapter<ShoppingLists, ShoppingListAdapter.ShoppingListViewHolder>{
-        public ShoppingListAdapter(Query query) {
+        Fragment fragment;
+        public ShoppingListAdapter(Query query, Fragment fragment) {
             super(ShoppingLists.class,
                     R.layout.shopping_list_name_item,
                     ShoppingListViewHolder.class,
                     query
             );
+            this.fragment = fragment;
         }
 
         @Override
@@ -89,14 +92,34 @@ public class ShoppingListFragment extends Fragment {
             viewHolder.tvListName.setText(model.getName());
         }
 
-        public static class ShoppingListViewHolder extends RecyclerView.ViewHolder{
+        @Override
+        public ShoppingListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+
+            return new ShoppingListViewHolder(view, fragment);
+        }
+
+        public static class ShoppingListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView tvListName;
             FloatingActionButton fabListShare;
+            Fragment fragment;
 
-            public ShoppingListViewHolder(View itemView) {
+            public ShoppingListViewHolder(View itemView, Fragment fragment) {
                 super(itemView);
+                this.fragment = fragment;
                 tvListName = (TextView) itemView.findViewById(R.id.tvListName);
                 fabListShare = (FloatingActionButton) itemView.findViewById(R.id.fabListShare);
+
+                fabListShare.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                //1) instance of the userDialog fragment.
+                ShareFragment shareFragment = new ShareFragment();
+
+                //2) instance.show(fm /*childFragmentManager*/, "tag")
+                shareFragment.show(fragment.getChildFragmentManager(), "ShareFragment");
             }
         }
     }
