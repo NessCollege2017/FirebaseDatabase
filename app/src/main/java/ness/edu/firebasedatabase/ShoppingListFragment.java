@@ -2,7 +2,6 @@ package ness.edu.firebasedatabase;
 
 
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -133,13 +132,13 @@ public class ShoppingListFragment extends Fragment {
                     shoppingListItemsFragment.setArguments(bundle);
 
 
-                    shoppingListItemsFragment.show(fragment.getChildFragmentManager(), "items");
+                 //   shoppingListItemsFragment.show(fragment.getChildFragmentManager(), "items");
 
-//                    fragment.getActivity().getSupportFragmentManager().
-//                            beginTransaction().
-//                            addToBackStack("shoppingListItemsFragment").
-//                            replace(R.id.container, shoppingListItemsFragment).
-//                            commit();
+                    fragment.getActivity().getSupportFragmentManager().
+                            beginTransaction().
+                            addToBackStack("shoppingListItemsFragment").
+                            replace(R.id.container, shoppingListItemsFragment).
+                            commit();
                 }
             }
         }
