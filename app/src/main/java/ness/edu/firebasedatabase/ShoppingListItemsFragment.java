@@ -1,21 +1,27 @@
 package ness.edu.firebasedatabase;
 
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +35,7 @@ import ness.edu.firebasedatabase.models.ShoppingLists;
  * A simple {@link Fragment} subclass.
  */
 public class ShoppingListItemsFragment extends DialogFragment {
-    ShoppingLists shoppingList;
+    ness.edu.firebasedatabase.models.ShoppingLists shoppingList;
     @BindView(R.id.fabAddProduct)
     FloatingActionButton fabAddProduct;
     @BindView(R.id.etProductName)
@@ -45,6 +51,16 @@ public class ShoppingListItemsFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_shopping_list_items, container, false);
         unbinder = ButterKnife.bind(this, view);
         shoppingList = getArguments().getParcelable("list");
+
+        //1) ref list items.
+        DatabaseReference ref = FirebaseDatabase.
+                getInstance().
+                getReference("ListItems").
+                child(shoppingList.getListUID());
+
+        ProductAdapter adapter = new ProductAdapter(ref);
+        rvProducts.setAdapter(adapter);
+        rvProducts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return view;
     }
@@ -79,5 +95,34 @@ public class ShoppingListItemsFragment extends DialogFragment {
 
 
         ref.push().setValue(product);
+    }
+
+    public static class ProductAdapter
+            extends FirebaseRecyclerAdapter<ShoppingListProduct, ProductAdapter.ProductViewHolder> {
+        //Constructor
+        public ProductAdapter(Query query) {
+            super(ShoppingListProduct.class, R.layout.product_item, ProductViewHolder.class, query);
+        }
+
+        //Binding
+        @Override
+        protected void populateViewHolder(ProductViewHolder viewHolder, ShoppingListProduct model, int position) {
+            viewHolder.tvProduct.setText(model.getProductName());
+            viewHolder.model = model;
+        }
+
+        //VH
+        public static class ProductViewHolder extends RecyclerView.ViewHolder {
+            TextView tvProduct;
+            ShoppingListProduct model;
+            Context context;
+
+            public ProductViewHolder(View itemView) {
+                super(itemView);
+                tvProduct = (TextView) itemView.findViewById(R.id.tvProductName);
+                context = itemView.getContext();
+            }
+        }
+
     }
 }
